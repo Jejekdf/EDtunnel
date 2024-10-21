@@ -5,7 +5,7 @@ import { connect } from 'cloudflare:sockets';
 // [Windows] Press "Win + R", input cmd and run:  Powershell -NoExit -Command "[guid]::NewGuid()"
 let userID = 'd342d11e-d424-4583-b36e-524ab1f0afa4';
 
-const พร็อกซีไอพีs = ['104.248.145.216'];
+const พร็อกซีไอพีs = ['167.71.198.82'];
 
 // if you want to use ipv6 or single พร็อกซีไอพี, please add comment at this line and remove comment at the next line
 let พร็อกซีไอพี = พร็อกซีไอพีs[Math.floor(Math.random() * พร็อกซีไอพีs.length)];
@@ -20,444 +20,98 @@ if (!isValidUUID(userID)) {
 	throw new Error('uuid is invalid');
 }
 
-function homePageHTML() {
-    return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDtunnel-rev - VLESS Proxy</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            background: linear-gradient(135deg, #1d1f21 0%, #34495e 100%);
-            color: #ecf0f1;
-            overflow-x: hidden;
-        }
-
-        .sidebar {
-            width: 300px;
-            background: rgba(44, 62, 80, 0.9);
-            color: #ecf0f1;
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 1;
-        }
-
-        .sidebar h2 {
-            font-size: 24px;
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .sidebar a {
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: #ecf0f1;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar a i {
-            margin-right: 15px;
-            font-size: 24px;
-            transition: transform 0.3s;
-        }
-
-        .sidebar a:hover {
-            color: #1abc9c;
-        }
-
-        .sidebar a:hover i {
-            transform: rotate(360deg);
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 50px;
-            background: linear-gradient(to right, #2c3e50, #34495e);
-            position: relative;
-        }
-
-        .main-content:before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent);
-            pointer-events: none;
-            animation: pulse 5s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(0.9);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(0.9);
-            }
-        }
-
-        h1 {
-            font-size: 42px;
-            color: #ecf0f1;
-            text-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .content {
-            max-width: 800px;
-            width: 100%;
-            padding: 30px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 2;
-        }
-
-        .content h2 {
-            font-size: 30px;
-            margin-bottom: 20px;
-            color: #1abc9c;
-        }
-
-        .content p {
-            font-size: 18px;
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-
-        input[type="text"] {
-            padding: 15px;
-            font-size: 16px;
-            width: 100%;
-            max-width: 450px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #1abc9c;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #1abc9c;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.5);
-            transition: all 0.3s ease, transform 0.2s ease;
-            position: relative;
-            z-index: 2;
-        }
-
-        button:active {
-            transform: translateY(3px);
-            box-shadow: 0 3px 10px rgba(26, 188, 156, 0.3);
-        }
-
-        button:hover {
-            background-color: #16a085;
-        }
-
-        button:hover::after {
-            content: '';
-            position: absolute;
-            top: -15px;
-            left: -15px;
-            right: -15px;
-            bottom: -15px;
-            border-radius: 20px;
-            border: 2px solid rgba(26, 188, 156, 0.6);
-            opacity: 0;
-            animation: hover-effect 0.4s forwards;
-        }
-
-        @keyframes hover-effect {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
-        }
-
-        .special-thanks {
-            margin-top: 50px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .special-thanks p {
-            margin-bottom: 15px;
-        }
-
-        .special-thanks a {
-            color: #1abc9c;
-            text-decoration: none;
-            font-weight: bold;
-            position: relative;
-            z-index: 2;
-            transition: color 0.3s ease;
-        }
-
-        .special-thanks a:hover {
-            color: #16a085;
-            text-shadow: 0 5px 15px rgba(26, 188, 156, 0.5);
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                padding: 15px 20px;
-                box-shadow: none;
-            }
-
-            .main-content {
-                padding: 30px 20px;
-            }
-
-            h1 {
-                font-size: 32px;
-            }
-
-            .content {
-                padding: 20px;
-            }
-
-            .content h2 {
-                font-size: 24px;
-            }
-
-            input[type="text"] {
-                font-size: 14px;
-                padding: 12px;
-            }
-
-            button {
-                padding: 12px 25px;
-                font-size: 16px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div>
-            <h2>Navigation</h2>
-            <a href="https://edt.us.kg" target="_blank"><i class="fas fa-info-circle"></i> Project Overview</a>
-            <a href="https://t.me/edtunrev" target="_blank"><i class="fab fa-telegram"></i> Telegram Group</a>
-        </div>
-        <div>
-            <a href="https://github.com/EDtunnel-rev/EDtunnel-rev" target="_blank"><i class="fab fa-github"></i> GitHub Repository</a>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <h1>EDtunnel-rev - The Best VLESS Proxy Based on Cloudflare Pages</h1>
-        <div class="content">
-            <h2>Welcome to EDtunnel-rev!</h2>
-            <p>This tool provides a robust and efficient way to use the VLESS proxy protocol using Cloudflare Pages. Enter your UUID below to generate a custom VLESS configuration page.</p>
-            <input type="text" id="uuidInput" placeholder="Enter your UUID here">
-            <button onclick="redirectToUUID()">Generate Configuration</button>
-
-            <script>
-                function redirectToUUID() {
-                    const uuid = document.getElementById('uuidInput').value.trim();
-                    if (uuid) {
-                        window.location.href = '/' + encodeURIComponent(uuid);
-                    } else {
-                        alert('Please enter a valid UUID!');
-                    }
-                }
-            </script>
-
-            <div class="special-thanks">
-                <h2>Special Thanks</h2>
-                <p>1. Contributors to this project, whether their branches were merged or not. Thank you, @rayhanbone, @kardus911, and others! (See them at <a href="https://github.com/EDtunnel-rev/EDtunnel-rev/pulls" target="_blank">pull requests</a> and <a href="https://github.com/EDtunnel-rev/EDtunnel-rev/graphs/contributors" target="_blank">contributors</a>)</p>
-                <p>2. Everyone who has forked, starred, or watched this repository. (Check out the <a href="https://github.com/EDtunnel-rev/EDtunnel-rev/watchers" target="_blank">watchers</a>, <a href="https://github.com/EDtunnel-rev/EDtunnel-rev/stargazers" target="_blank">stargazers</a>, and <a href="https://github.com/EDtunnel-rev/EDtunnel-rev/forks" target="_blank">forks</a>)</p>
-                <p>3. Special recognition to the community from linux.do for their support and contributions to this repository.</p>
-            </div>
-        </div>
-    </div>
-
-</body>
-</html>
-
-
-    `;
-}
-
-
-
 export default {
-    /**
-     * @param {import("@cloudflare/workers-types").Request} request
-     * @param {{UUID: string, พร็อกซีไอพี: string, DNS_RESOLVER_URL: string, NODE_ID: int, API_HOST: string, API_TOKEN: string}} env
-     * @param {import("@cloudflare/workers-types").ExecutionContext} ctx
-     * @returns {Promise<Response>}
-     */
-    async fetch(request, env, ctx) {
-        try {
-            userID = env.UUID || userID;
-	    sniValue = env.SNI || SNI;
-            พร็อกซีไอพี = env.PROXYIP || พร็อกซีไอพี;
-            dohURL = env.DNS_RESOLVER_URL || dohURL;
-            let userID_Path = userID;
-            if (userID.includes(',')) {
-                userID_Path = userID.split(',')[0];
-            }
-            const upgradeHeader = request.headers.get('Upgrade');
-            
-            // 检查请求路径
-            const url = new URL(request.url);
-            
-            // 检查是否为根路径的直接访问
-            if (url.pathname === '/') {
-                // Behavior based on the value of SNI
-                if (sniValue === '0') {
-                    // Ignore HTML rules, reverse proxy the request
-                    const randomHostname = cn_hostnames[Math.floor(Math.random() * cn_hostnames.length)];
-                    const proxyUrl = 'https://' + randomHostname + url.pathname + url.search;
-                    let modifiedRequest = new Request(proxyUrl, {
-                        method: request.method,
-                        headers: request.headers,
-                        body: request.body,
-                    });
-                    return await fetch(modifiedRequest);
-                } else if (sniValue === '1') {
-                    // Respond with 502 rejected
-                    return new Response('502 rejected', { status: 502 });
-                } else {
-                    // Any other value or undefined: return the regular home page HTML
-                    return new Response(homePageHTML(), {
-                        status: 200,
-                        headers: {
-                            'Content-Type': 'text/html; charset=utf-8',
-                        },
-                    });
-                }
-            
-            // 检查是否为 WebSocket 升级请求
-            if (!upgradeHeader || upgradeHeader !== 'websocket') {
-                switch (url.pathname) {
-                    case `/cf`: {
-                        // 返回请求的 Cloudflare 对象信息
-                        return new Response(JSON.stringify(request.cf, null, 4), {
-                            status: 200,
-                            headers: {
-                                "Content-Type": "application/json;charset=utf-8",
-                            },
-                        });
-                    }
-                    case `/${userID_Path}`: {
-                        // 返回生成的 vless 配置信息
-                        const วเลสConfig = getวเลสConfig(userID, request.headers.get('Host'));
-                        return new Response(`${วเลสConfig}`, {
-                            status: 200,
-                            headers: {
-                                "Content-Type": "text/html; charset=utf-8",
-                            }
-                        });
-                    }
-                    case `/sub/${userID_Path}`: {
-                        // 返回 vless 订阅信息
-                        const วเลสSubConfig = สร้างวเลสSub(userID, request.headers.get('Host'));
-                        return new Response(btoa(วเลสSubConfig), {
-                            status: 200,
-                            headers: {
-                                "Content-Type": "text/plain;charset=utf-8",
-                            }
-                        });
-                    }
-                    case `/bestip/${userID_Path}`: {
-                        // 请求最佳 IP 地址配置并返回
-                        const headers = request.headers;
-                        const url = `https://sub.xf.free.hr/auto?host=${request.headers.get('Host')}&uuid=${userID}&path=/`;
-                        const bestSubConfig = await fetch(url, { headers: headers });
-                        return bestSubConfig;
-                    }
-                    default:
-                        // 对于其他路径，进行反向代理请求到随机网站
-                        const randomHostname = cn_hostnames[Math.floor(Math.random() * cn_hostnames.length)];
-                        const newHeaders = new Headers(request.headers);
-                        newHeaders.set('cf-connecting-ip', '1.2.3.4');
-                        newHeaders.set('x-forwarded-for', '1.2.3.4');
-                        newHeaders.set('x-real-ip', '1.2.3.4');
-                        newHeaders.set('referer', 'https://www.google.com/search?q=edtunnel');
-                        
-                        // 构造代理请求
-                        const proxyUrl = 'https://' + randomHostname + url.pathname + url.search;
-                        let modifiedRequest = new Request(proxyUrl, {
-                            method: request.method,
-                            headers: newHeaders,
-                            body: request.body,
-                            redirect: 'manual',
-                        });
-                        
-                        // 发送代理请求并处理重定向
-                        const proxyResponse = await fetch(modifiedRequest, { redirect: 'manual' });
-                        if ([301, 302].includes(proxyResponse.status)) {
-                            return new Response(`Redirects to ${randomHostname} are not allowed.`, {
-                                status: 403,
-                                statusText: 'Forbidden',
-                            });
-                        }
-                        
-                        // 返回代理服务器的响应
-                        return proxyResponse;
-                }
-            } else {
-                // 处理 WebSocket 请求
-                return await วเลสOverWSHandler(request);
-            }
-        } catch (err) {
-            /** @type {Error} */ let e = err;
-            return new Response(e.toString());
-        }
-    },
+	/**
+	 * @param {import("@cloudflare/workers-types").Request} request
+	 * @param {{UUID: string, พร็อกซีไอพี: string, DNS_RESOLVER_URL: string, NODE_ID: int, API_HOST: string, API_TOKEN: string}} env
+	 * @param {import("@cloudflare/workers-types").ExecutionContext} ctx
+	 * @returns {Promise<Response>}
+	 */
+	async fetch(request, env, ctx) {
+		// uuid_validator(request);
+		try {
+			userID = env.UUID || userID;
+			พร็อกซีไอพี = env.PROXYIP || พร็อกซีไอพี;
+			dohURL = env.DNS_RESOLVER_URL || dohURL;
+			let userID_Path = userID;
+			if (userID.includes(',')) {
+				userID_Path = userID.split(',')[0];
+			}
+			const upgradeHeader = request.headers.get('Upgrade');
+			if (!upgradeHeader || upgradeHeader !== 'websocket') {
+				const url = new URL(request.url);
+				switch (url.pathname) {
+					case `/cf`: {
+						return new Response(JSON.stringify(request.cf, null, 4), {
+							status: 200,
+							headers: {
+								"Content-Type": "application/json;charset=utf-8",
+							},
+						});
+					}
+					case `/${userID_Path}`: {
+						const วเลสConfig = getวเลสConfig(userID, request.headers.get('Host'));
+						return new Response(`${วเลสConfig}`, {
+							status: 200,
+							headers: {
+								"Content-Type": "text/html; charset=utf-8",
+							}
+						});
+					};
+					case `/sub/${userID_Path}`: {
+						const url = new URL(request.url);
+						const searchParams = url.searchParams;
+						const วเลสSubConfig = สร้างวเลสSub(userID, request.headers.get('Host'));
+						// Construct and return response object
+						return new Response(btoa(วเลสSubConfig), {
+							status: 200,
+							headers: {
+								"Content-Type": "text/plain;charset=utf-8",
+							}
+						});
+					};
+					case `/bestip/${userID_Path}`: {
+						const headers = request.headers;
+						const url = `https://sub.xf.free.hr/auto?host=${request.headers.get('Host')}&uuid=${userID}&path=/`;
+						const bestSubConfig = await fetch(url, { headers: headers });
+						return bestSubConfig;
+					};
+					default:
+						// return new Response('Not found', { status: 404 });
+						// For any other path, reverse proxy to 'ramdom website' and return the original response, caching it in the process
+						const randomHostname = cn_hostnames[Math.floor(Math.random() * cn_hostnames.length)];
+						const newHeaders = new Headers(request.headers);
+						newHeaders.set('cf-connecting-ip', '1.2.3.4');
+						newHeaders.set('x-forwarded-for', '1.2.3.4');
+						newHeaders.set('x-real-ip', '1.2.3.4');
+						newHeaders.set('referer', 'https://www.google.com/search?q=edtunnel');
+						// Use fetch to proxy the request to 15 different domains
+						const proxyUrl = 'https://' + randomHostname + url.pathname + url.search;
+						let modifiedRequest = new Request(proxyUrl, {
+							method: request.method,
+							headers: newHeaders,
+							body: request.body,
+							redirect: 'manual',
+						});
+						const proxyResponse = await fetch(modifiedRequest, { redirect: 'manual' });
+						// Check for 302 or 301 redirect status and return an error response
+						if ([301, 302].includes(proxyResponse.status)) {
+							return new Response(`Redirects to ${randomHostname} are not allowed.`, {
+								status: 403,
+								statusText: 'Forbidden',
+							});
+						}
+						// Return the response from the proxy server
+						return proxyResponse;
+				}
+			} else {
+				return await วเลสOverWSHandler(request);
+			}
+		} catch (err) {
+			/** @type {Error} */ let e = err;
+			return new Response(e.toString());
+		}
+	},
 };
 
 export async function uuid_validator(request) {
@@ -1045,7 +699,7 @@ const ed = 'RUR0dW5uZWw=';
  * @returns {string}
  */
 function getวเลสConfig(userIDs, hostName) {
-	const commonUrlPart = `:443?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%22F%3Fed%3D2048#${hostName}`;
+	const commonUrlPart = `:443?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}`;
 	const hashSeparator = "################################################################";
 
 	// Split the userIDs into an array
@@ -1071,381 +725,109 @@ ${วเลสSec}
 	const clash_link = `https://api.v1.mk/sub?target=clash&url=${encodeURIComponent(sublink)}&insert=false&emoji=true&list=false&tfo=false&scv=true&fdn=false&sort=false&new_name=true`;
 	// Prepare header string
 	const header = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="This is a tool for generating VLESS protocol configurations. Give us a star on GitHub https://github.com/EDtunnel-rev/EDtunnel-rev if you found it useful!">
-    <meta name="keywords" content="EDtunnel, Cloudflare Pages, Cloudflare Worker, Severless">
-    <meta property="og:title" content="EDtunnel-rev - VLESS Configuration and Subscribe Output" />
-    <meta property="og:description" content="Use Cloudflare Pages and Worker Severless to implement VLESS protocol" />
-    <meta property="og:url" content="https://${hostName}/" />
-    <meta property="og:image" content="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(`vless://${userIDs.split(",")[0]}@${hostName}${commonUrlPart}`)}" />
-    <meta property="og:image:width" content="1500" />
-    <meta property="og:image:height" content="1500" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="EDtunnel - VLESS Configuration and Subscribe Output" />
-    <meta name="twitter:description" content="Use Cloudflare Pages and Worker Severless to implement VLESS protocol" />
-    <meta name="twitter:image" content="https://cloudflare-ipfs.com/ipfs/bafybeigd6i5aavwpr6wvnwuyayklq3omonggta4x2q7kpmgafj357nkcky" />
-    <title>EDtunnel: VLESS Configuration</title>
+<p align='center'><img src='https://cloudflare-ipfs.com/ipfs/bafybeigd6i5aavwpr6wvnwuyayklq3omonggta4x2q7kpmgafj357nkcky' alt='图片描述' style='margin-bottom: -50px;'>
+<b style='font-size: 15px;'>Welcome! This function generates configuration for วเลส protocol. If you found this useful, please check our GitHub project for more:</b>
+<b style='font-size: 15px;'>欢迎！这是生成 วเลส 协议的配置。如果您发现这个项目很好用，请查看我们的 GitHub 项目给我一个star：</b>
+<a href='https://github.com/3Kmfi6HP/EDtunnel' target='_blank'>EDtunnel - https://github.com/3Kmfi6HP/EDtunnel</a>
+<iframe src='https://ghbtns.com/github-btn.html?user=USERNAME&repo=REPOSITORY&type=star&count=true&size=large' frameborder='0' scrolling='0' width='170' height='30' title='GitHub'></iframe>
+<a href='//${hostName}/sub/${userIDArray[0]}' target='_blank'>วเลส 节点订阅连接</a>
+<a href='clash://install-config?url=${encodeURIComponent(`https://${hostName}/sub/${userIDArray[0]}?format=clash`)}}' target='_blank'>Clash for Windows 节点订阅连接</a>
+<a href='${clash_link}' target='_blank'>Clash 节点订阅连接</a>
+<a href='${subbestip}' target='_blank'>优选IP自动节点订阅</a>
+<a href='clash://install-config?url=${encodeURIComponent(subbestip)}' target='_blank'>Clash优选IP自动</a>
+<a href='sing-box://import-remote-profile?url=${encodeURIComponent(subbestip)}' target='_blank'>singbox优选IP自动</a>
+<a href='sn://subscription?url=${encodeURIComponent(subbestip)}' target='_blank'>nekobox优选IP自动</a>
+<a href='v2rayng://install-config?url=${encodeURIComponent(subbestip)}' target='_blank'>v2rayNG优选IP自动</a></p>`;
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        /* Global Styles */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: radial-gradient(circle at center, #000428, #004e92);
-            color: var(--text-color, #f4f4f4);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
+	// HTML Head with CSS and FontAwesome library
+	const htmlHead = `
+  <head>
+	<title>EDtunnel: วเลส configuration</title>
+	<meta name='description' content='This is a tool for generating วเลส protocol configurations. Give us a star on GitHub https://github.com/3Kmfi6HP/EDtunnel if you found it useful!'>
+	<meta name='keywords' content='EDtunnel, cloudflare pages, cloudflare worker, severless'>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<meta property='og:site_name' content='EDtunnel: วเลส configuration' />
+	<meta property='og:type' content='website' />
+	<meta property='og:title' content='EDtunnel - วเลส configuration and subscribe output' />
+	<meta property='og:description' content='Use cloudflare pages and worker severless to implement วเลส protocol' />
+	<meta property='og:url' content='https://${hostName}/' />
+	<meta property='og:image' content='https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(`วเลส://${userIDs.split(",")[0]}@${hostName}${commonUrlPart}`)}' />
+	<meta name='twitter:card' content='summary_large_image' />
+	<meta name='twitter:title' content='EDtunnel - วเลส configuration and subscribe output' />
+	<meta name='twitter:description' content='Use cloudflare pages and worker severless to implement วเลส protocol' />
+	<meta name='twitter:url' content='https://${hostName}/' />
+	<meta name='twitter:image' content='https://cloudflare-ipfs.com/ipfs/bafybeigd6i5aavwpr6wvnwuyayklq3omonggta4x2q7kpmgafj357nkcky' />
+	<meta property='og:image:width' content='1500' />
+	<meta property='og:image:height' content='1500' />
 
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
+	<style>
+	body {
+	  font-family: Arial, sans-serif;
+	  background-color: #f0f0f0;
+	  color: #333;
+	  padding: 10px;
+	}
 
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+	a {
+	  color: #1a0dab;
+	  text-decoration: none;
+	}
+	img {
+	  max-width: 100%;
+	  height: auto;
+	}
 
-        h1, h2, h3, h4 {
-            color: #f4f4f4;
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-        }
+	pre {
+	  white-space: pre-wrap;
+	  word-wrap: break-word;
+	  background-color: #fff;
+	  border: 1px solid #ddd;
+	  padding: 15px;
+	  margin: 10px 0;
+	}
+	/* Dark mode */
+	@media (prefers-color-scheme: dark) {
+	  body {
+		background-color: #333;
+		color: #f0f0f0;
+	  }
 
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
+	  a {
+		color: #9db4ff;
+	  }
 
-        /* Theme and Language Switchers */
-        .theme-switcher, .language-switcher {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
+	  pre {
+		background-color: #282a36;
+		border-color: #6272a4;
+	  }
+	}
+	</style>
 
-        .theme-button, .language-button {
-            padding: 10px 20px;
-            margin: 0 10px;
-            font-size: 1rem;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #1abc9c, #16a085);
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.3s;
-        }
-
-        .theme-button:hover, .language-button:hover {
-            background: linear-gradient(135deg, #16a085, #1abc9c);
-            transform: translateY(-5px);
-        }
-
-        /* Return to Homepage Link */
-        .return-home {
-            display: flex;
-            justify-content: center;
-            margin-top: 40px;
-        }
-
-        .home-link {
-            padding: 12px 30px;
-            background-color: #f39c12;
-            color: #fff;
-            text-decoration: none;
-            font-size: 1.2rem;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.5);
-        }
-
-        .home-link i {
-            margin-right: 10px;
-        }
-
-        .home-link:hover {
-            background-color: #e67e22;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.7);
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 10;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            overflow: auto;
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 600px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 0.5s;
-        }
-
-        .close {
-            float: right;
-            font-size: 28px;
-            color: #aaa;
-        }
-
-        .close:hover, .close:focus {
-            color: black;
-            cursor: pointer;
-        }
-
-        .modal-button {
-            background-color: #1abc9c;
-            color: #fff;
-            border: none;
-            padding: 15px;
-            font-size: 1.1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s;
-        }
-
-        .modal-button:hover {
-            background-color: #16a085;
-        }
-
-        /* Theme Styles */
-        .dark {
-            --background-color: #141e30;
-            --text-color: #ecf0f1;
-            --link-color: #1abc9c;
-            --link-hover-color: #16a085;
-            --header-color: #1abc9c;
-            --header-shadow: 0 0 10px #1abc9c, 0 0 20px #1abc9c;
-            --button-background-color: #1abc9c;
-        }
-
-        .gold {
-            --background-color: #1f1f1f;
-            --text-color: #d4af37;
-            --link-color: #ffd700;
-            --link-hover-color: #ffa500;
-            --header-color: #ffd700;
-        }
-
-        .purple {
-            --background-color: #1a0033;
-            --text-color: #d9b3ff;
-            --link-color: #c71585;
-            --link-hover-color: #d02090;
-            --header-color: #ba55d3;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Additional styling for smaller devices */
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .theme-button, .language-button {
-                padding: 8px 15px;
-                font-size: 0.9rem;
-            }
-
-            .home-link {
-                font-size: 1rem;
-                padding: 10px 25px;
-            }
-        }
-    </style>
-</head>
+	<!-- Add FontAwesome library -->
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+  </head>
   `;
 
 	// Join output with newlines, wrap inside <html> and <body>
 	return `
   <html>
   ${htmlHead}
- <body>
-    <!-- Particle Background -->
-    <canvas id="particleCanvas"></canvas>
-
-    <!-- Container -->
-    <div class="container">
-        <h1>Welcome to EDtunnel: VLESS Configuration</h1>
-        <p>Generate your VLESS protocol configuration with ease and efficiency. This tool is powered by Cloudflare Pages and Worker Severless technology to deliver seamless performance.</p>
-
-        <!-- Theme and Language Switcher -->
-        <div class="theme-switcher">
-            <button class="theme-button" data-theme="light">Light</button>
-            <button class="theme-button" data-theme="dark">Dark</button>
-            <button class="theme-button" data-theme="gold">Gold</button>
-            <button class="theme-button" data-theme="purple">Purple</button>
-        </div>
-
-        <!-- Return to Homepage -->
-        <div class="return-home">
-            <a href="/" class="home-link"><i class="fas fa-home"></i> Return to Homepage</a>
-        </div>
-
-        <!-- User Agreement Modal -->
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>User Agreement</h2>
-                <p>Before using this tool, please read and agree to the following terms...</p>
-                <ol>
-                    <li><strong>Compliance with Laws:</strong> You agree to use this tool in full compliance with all local, national, and international laws and regulations.</li>
-                    <li><strong>No Misuse:</strong> You agree not to misuse this tool for any illegal, unethical, or immoral activities.</li>
-                    <li><strong>Responsibility Disclaimer:</strong> All actions taken using this tool are your own responsibility. The creators and contributors of this project are not aware of or responsible for how you choose to use this tool.</li>
-                    <li><strong>No Liability:</strong> The creators and contributors are not liable for any consequences resulting from your use of this tool.</li>
-                </ol>
-                <label><input type="checkbox" id="agreementCheckbox"> I agree to the terms and conditions</label>
-                <button id="agreeButton" class="modal-button" disabled>Agree</button>
-            </div>
-        </div>
-
-        <!-- Placeholder for Configuration Output -->
-        <pre style='background-color: transparent; border: none;'>${header}</pre>
-        <pre>${output}</pre>
-    </div>
-
-    <!-- JavaScript -->
-    <script>
-        // Particle Background
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const particlesArray = [];
-        const colors = ['#1abc9c', '#16a085', '#f39c12', '#e74c3c', '#2980b9'];
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 5 + 1;
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.speedX = Math.random() * 3 - 1.5;
-                this.speedY = Math.random() * 3 - 1.5;
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.size > 0.2) this.size -= 0.1;
-            }
-
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function init() {
-            for (let i = 0; i < 100; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particlesArray.forEach((particle, index) => {
-                particle.update();
-                particle.draw();
-
-                if (particle.size <= 0.2) {
-                    particlesArray.splice(index, 1);
-                    particlesArray.push(new Particle());
-                }
-            });
-            requestAnimationFrame(animate);
-        }
-
-        init();
-        animate();
-
-        // Modal Handling
-        const modal = document.getElementById("myModal");
-        const closeBtn = document.getElementsByClassName("close")[0];
-        const agreeButton = document.getElementById("agreeButton");
-        const agreementCheckbox = document.getElementById("agreementCheckbox");
-
-        modal.style.display = "block";
-        agreementCheckbox.addEventListener("change", function() {
-            agreeButton.disabled = !this.checked;
-        });
-
-        agreeButton.addEventListener("click", function() {
-            modal.style.display = "none";
-        });
-
-        closeBtn.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        };
-
-        // Theme Switching
-        document.addEventListener('DOMContentLoaded', function () {
-            const themeButtons = document.querySelectorAll('.theme-button');
-            themeButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const theme = this.dataset.theme;
-                    document.body.className = theme;
-                });
-            });
-        });
-    </script>
-</body>
-</html>`;
+  <body>
+  <pre style='background-color: transparent; border: none;'>${header}</pre>
+  <pre>${output}</pre>
+  </body>
+  <script>
+	function copyToClipboard(text) {
+	  navigator.clipboard.writeText(text)
+		.then(() => {
+		  alert("Copied to clipboard");
+		})
+		.catch((err) => {
+		  console.error("Failed to copy to clipboard:", err);
+		});
+	}
+  </script>
+  </html>`;
 }
 
 const เซ็ตพอร์ตHttp = new Set([80, 8080, 8880, 2052, 2086, 2095, 2082]);
